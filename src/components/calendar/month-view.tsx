@@ -14,12 +14,6 @@ import {
 } from "date-fns";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
 import type { Reading } from "./types";
 
 interface MonthViewProps {

@@ -19,7 +19,6 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 
 import {
   AgendaView,
@@ -72,12 +71,6 @@ export function ReadingCalendar({
         case "m":
           setView("month");
           break;
-        case "w":
-          setView("week");
-          break;
-        case "d":
-          setView("day");
-          break;
         case "a":
           setView("agenda");
           break;
@@ -94,10 +87,6 @@ export function ReadingCalendar({
   const handlePrevious = () => {
     if (view === "month") {
       setCurrentDate(subMonths(currentDate, 1));
-    } else if (view === "week") {
-      setCurrentDate(subWeeks(currentDate, 1));
-    } else if (view === "day") {
-      setCurrentDate(addDays(currentDate, -1));
     } else if (view === "agenda") {
       // For agenda view, go back 30 days (a full month)
       setCurrentDate(addDays(currentDate, -30));
@@ -107,10 +96,6 @@ export function ReadingCalendar({
   const handleNext = () => {
     if (view === "month") {
       setCurrentDate(addMonths(currentDate, 1));
-    } else if (view === "week") {
-      setCurrentDate(addWeeks(currentDate, 1));
-    } else if (view === "day") {
-      setCurrentDate(addDays(currentDate, 1));
     } else if (view === "agenda") {
       // For agenda view, go forward 30 days (a full month)
       setCurrentDate(addDays(currentDate, 30));
@@ -250,6 +235,7 @@ export function ReadingCalendar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {/*
             <Button
               className="aspect-square max-[479px]:p-0!"
               onClick={() => {
@@ -264,6 +250,7 @@ export function ReadingCalendar({
               />
               <span className="max-sm:sr-only">New reading</span>
             </Button>
+            */}
           </div>
         </div>
 

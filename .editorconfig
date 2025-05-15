@@ -12,3 +12,7 @@ tab_width = 4
 [{*.js,*.jsx,*.ts,*.tsx}]
 indent_size = 2
 tab_width = 2
+
+[biome.json]
+indent_size = 2
+tab_width = 2

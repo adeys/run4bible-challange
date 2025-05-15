@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { RiDeleteBinLine } from "@remixicon/react";
+import { useEffect } from "react";
 
 import type { Reading } from "~/components/calendar";
+import { ReadingForm } from "~/components/reading/reading-form";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -13,46 +15,40 @@ import {
 
 interface ReadingDialogProps {
   reading: Reading | null;
+  error?: string | null;
+  action?: string;
   isOpen: boolean;
-  onClose: () => void;
-  onSave: (reading: Reading) => void;
-  onDelete: (eventId: string) => void;
+  onClose?: () => void;
+  // onSave: (reading: Reading) => void;
+  onDelete?: (eventId: string) => void;
 }
 
-function ReadingDetailItem({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | string[] | undefined;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <dt className="font-bold text-sm">{label}</dt>
-      <div className="text-gray-700">
-        {Array.isArray(value) ? value.join(", ") : (value || "-")}
-      </div>
-    </div>
-  );
-}
-
-export function ReadingDialog({
+export function ReadingFormDialog({
+  action,
   reading,
+  error,
   isOpen,
   onClose,
+  onDelete,
 }: ReadingDialogProps) {
-  const [error, setError] = useState<string | null>(null);
-
   // Debug log to check what reading is being passed
   useEffect(() => {
-    console.log("ReadingDialog received reading:", reading);
+    console.log("ReadingFormDialog received reading:", reading);
   }, [reading]);
 
+  const handleDelete = () => {
+    if (reading?.id) {
+      onDelete?.(reading.id);
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose?.()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Day {reading?.dayNumber} Reading</DialogTitle>
+          <DialogTitle>
+            {reading?.id ? "Edit Event" : "Create Event"}
+          </DialogTitle>
           <DialogDescription className="sr-only">
             {reading?.id
               ? "Edit the details of this reading"
@@ -64,18 +60,26 @@ export function ReadingDialog({
             {error}
           </div>
         )}
-        <div className="grid gap-4 py-4">
-          <dl className="space-y-4">
-            <ReadingDetailItem label="Passages" value={reading?.passages} />
-            <ReadingDetailItem label="Context" value={reading?.context} />
-            <ReadingDetailItem label="Summary" value={reading?.summary} />
-            <ReadingDetailItem label="Lesson" value={reading?.lesson} />
-          </dl>
-        </div>
+
+        <ReadingForm reading={reading} action={action} />
+
         <DialogFooter className="flex-row sm:justify-between">
+          {reading?.id && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleDelete}
+              aria-label="Delete reading"
+            >
+              <RiDeleteBinLine size={16} aria-hidden="true" />
+            </Button>
+          )}
           <div className="flex flex-1 justify-end gap-2">
             <Button variant="outline" onClick={onClose}>
               Cancel
+            </Button>
+            <Button type="submit" form="reading-form">
+              Save
             </Button>
           </div>
         </DialogFooter>
