@@ -4,19 +4,16 @@ import { RiCalendarCheckLine } from "@remixicon/react";
 import {
   addDays,
   addMonths,
-  addWeeks,
   endOfWeek,
   format,
   isSameMonth,
   startOfWeek,
   subMonths,
-  subWeeks,
 } from "date-fns";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  PlusIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 

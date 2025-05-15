@@ -30,7 +30,7 @@ function ReadingDetailItem({
     <div className="flex flex-col gap-1">
       <dt className="font-bold text-sm">{label}</dt>
       <div className="text-gray-700">
-        {Array.isArray(value) ? value.join(", ") : (value || "-")}
+        {Array.isArray(value) ? value.join(", ") : value || "-"}
       </div>
     </div>
   );
