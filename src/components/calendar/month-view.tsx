@@ -19,14 +19,13 @@ import type { Reading } from "./types";
 interface MonthViewProps {
   currentDate: Date;
   readings: Reading[];
-  onReadingSelect?: (reading: Reading) => void;
-  onReadingCreate?: (startTime: Date) => void;
+  onCellClick?: (date: Date, reading: Reading | null) => void;
 }
 
 export function MonthView({
   currentDate,
   readings = [],
-  onReadingSelect,
+  onCellClick,
 }: MonthViewProps) {
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
@@ -59,9 +58,13 @@ export function MonthView({
     return result;
   }, [days]);
 
-  const handleReadingClick = (reading: Reading, e: React.MouseEvent) => {
+  const handleCellClick = (
+    e: React.MouseEvent,
+    date: Date,
+    reading: Reading | null,
+  ) => {
     e.stopPropagation();
-    onReadingSelect && onReadingSelect(reading);
+    onCellClick && onCellClick(date, reading);
   };
 
   const [isMounted, setIsMounted] = useState(false);
@@ -118,22 +121,24 @@ export function MonthView({
                     ref={null}
                     className="flex min-h-12 md:min-h-20 lg:min-h-24 cursor-pointer"
                   >
-                    {reading && (
-                      <div
-                        className="grow flex flex-col gap-1 py-2 items-center justify-center rounded-md text-sm text-muted-foreground font-medium"
-                        onClick={(e) => handleReadingClick(reading, e)}
-                      >
-                        <span className="font-semibold lg:font-bold text-center">
-                          Day {reading.dayNumber}
-                        </span>
-                        <span className="hidden lg:inline-block">
-                          {reading.passages.join(", ")}
-                        </span>
-                        <span className="hidden lg:inline-block">
-                          {reading.context}
-                        </span>
-                      </div>
-                    )}
+                    <div
+                      className="grow flex flex-col gap-1 py-2 items-center justify-center rounded-md text-sm text-muted-foreground font-medium"
+                      onClick={(e) => handleCellClick(e, day, reading)}
+                    >
+                      {reading && (
+                        <>
+                          <span className="font-semibold lg:font-bold text-center">
+                            {reading.label}
+                          </span>
+                          <span className="hidden lg:inline-block">
+                            {reading.passages.join(", ")}
+                          </span>
+                          <span className="hidden lg:inline-block">
+                            {reading.context}
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

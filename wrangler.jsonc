@@ -1,9 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "react-router-app",
+  "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2025-04-04",
   "main": "./workers/app.ts",
   "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
-  }
+    "VALUE_FROM_CLOUDFLARE": "Welcome to Cloudflare"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "r4b-database",
+      "database_id": "2d364084-46c2-4674-b0a1-2e508afa1f34",
+      "preview_database_id": "r4b-database-preview",
+      "migrations_dir": "./workers/migrations"
+    }
+  ]
 }

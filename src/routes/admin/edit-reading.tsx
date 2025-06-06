@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import { redirect, useNavigate, useParams } from "react-router";
+import { redirect, useNavigate } from "react-router";
 
 import type { Reading } from "~/components/calendar";
-import type { Route } from "./+types/schedule-calendar";
+import type { Route } from "./+types/edit-reading";
 
 import { ReadingFormDialog } from "~/components/reading/reading-form-dialog";
-import { getReadingById, updateReading } from "~/lib/storage";
+import { findReading, updateReading } from "~/lib/database";
 
 export function meta() {
   return [
@@ -14,6 +13,42 @@ export function meta() {
   ];
 }
 
+export async function loader({ context, params }: Route.LoaderArgs) {
+  const readingId = params.readingId;
+  if (!readingId) {
+    throw new Error("Reading ID is required");
+  }
+
+  const reading = await findReading(context.cloudflare.env.DB, readingId);
+  if (!reading) {
+    throw new Error(`Reading with ID ${readingId} not found`);
+  }
+
+  return { reading };
+}
+
+export async function action({ context, request, params }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const reading = {
+    uuid: params.readingId,
+    label: formData.get("label") as string,
+    passages: [formData.get("passages") as string],
+    date: new Date(formData.get("date") as string),
+    context: formData.get("context") as string,
+    summary: formData.get("summary") as string,
+    lesson: formData.get("lesson") as string,
+    // published: formData.get("published") === "on",
+    published: true,
+  } as Reading;
+
+  const result = await updateReading(context.cloudflare.env.DB, reading);
+
+  console.log("Result from action:", result);
+
+  return redirect("/admin/calendar");
+}
+
+/*
 export async function clientAction({
   request,
   params,
@@ -37,25 +72,17 @@ export async function clientAction({
 
   return redirect("/admin/calendar");
 }
+ */
 
-export default function EditReading() {
+export default function EditReading({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
-  const { readingId } = useParams();
-  const [reading, setReading] = useState<Reading | null>(null);
-
-  useEffect(() => {
-    if (readingId) {
-      const reading = getReadingById(readingId);
-      setReading(reading);
-    }
-  }, [readingId]);
 
   return (
     <ReadingFormDialog
-      reading={reading}
-      action={null}
+      reading={loaderData.reading}
+      action={undefined}
       isOpen={true}
-      onClose={() => navigate(-1)}
+      onClose={() => navigate("/admin/calendar")}
     />
   );
 }

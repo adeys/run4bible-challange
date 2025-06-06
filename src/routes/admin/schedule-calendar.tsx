@@ -7,7 +7,7 @@ import type { Route } from "./+types/schedule-calendar";
 
 import { ScheduleCalendar } from "~/components/calendar";
 import { Toaster } from "~/components/ui/sonner";
-import { getAllReadings } from "~/lib/storage";
+import { fetchReadings } from "~/lib/database";
 
 export function meta() {
   return [
@@ -16,12 +16,11 @@ export function meta() {
   ];
 }
 
-export async function clientLoader() {
-  return {
-    readings: getAllReadings(),
-  };
+export async function loader({ context }: Route.LoaderArgs) {
+  const result = await fetchReadings(context.cloudflare.env.DB);
+
+  return { readings: result.results };
 }
-clientLoader.hydrate = true as const;
 
 export function HydrateFallback() {
   return (
@@ -33,6 +32,7 @@ export function HydrateFallback() {
 
 export default function Calendar({ loaderData }: Route.ComponentProps) {
   const { readings } = loaderData;
+
   useEffect(() => {
     const flash = localStorage.getItem("flash");
     if (!flash) return;

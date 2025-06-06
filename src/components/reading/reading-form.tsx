@@ -39,9 +39,9 @@ export function ReadingForm({
           <Label htmlFor="label">Day label</Label>
           <Input
             id="label"
-            type="number"
+            type="text"
             name="label"
-            defaultValue={reading?.dayNumber}
+            defaultValue={reading?.label}
           />
         </div>
 

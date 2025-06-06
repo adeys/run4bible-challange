@@ -1,5 +1,5 @@
 import { ReadingCalendar } from "~/components/calendar";
-import { getAllReadings } from "~/lib/storage";
+import { fetchReadings } from "~/lib/database";
 import type { Route } from "./+types/calendar";
 
 export function meta() {
@@ -9,12 +9,20 @@ export function meta() {
   ];
 }
 
+export async function loader({ context }: Route.LoaderArgs) {
+  const result = await fetchReadings(context.cloudflare.env.DB);
+
+  return { readings: result.results };
+}
+
+/*
 export async function clientLoader() {
   return {
     readings: getAllReadings(),
   };
 }
 clientLoader.hydrate = true as const;
+ */
 
 export default function Calendar({ loaderData }: Route.ComponentProps) {
   const { readings } = loaderData;

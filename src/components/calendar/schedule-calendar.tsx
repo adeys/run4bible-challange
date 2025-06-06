@@ -29,9 +29,12 @@ export function ScheduleCalendar({ className, readings }: CalendarProps) {
     setCurrentDate(new Date());
   };
 
-  const handleReadingSelect = (reading: Reading) => {
-    console.log("Reading selected:", reading); // Debug log
-    navigate(`/admin/calendar/reading/${reading.id}`);
+  const handleCellSelect = (date: Date, reading: Reading | null) => {
+    return reading
+      ? navigate(`/admin/calendar/reading/${reading.uuid}`)
+      : navigate(
+          `/admin/calendar/reading/create?date=${format(date, "yyyy-MM-dd")}`,
+        );
   };
 
   const viewTitle = format(currentDate, "MMMM yyyy");
@@ -106,8 +109,8 @@ export function ScheduleCalendar({ className, readings }: CalendarProps) {
         <div className="flex flex-1 flex-col">
           <MonthView
             currentDate={currentDate}
-            readings={readings}
-            onReadingSelect={handleReadingSelect}
+            readings={readings || []}
+            onCellClick={handleCellSelect}
           />
         </div>
       </>

@@ -103,7 +103,9 @@ export function ReadingCalendar({
     setCurrentDate(new Date());
   };
 
-  const handleReadingSelect = (reading: Reading) => {
+  const handleReadingSelect = (_: Date, reading: Reading | null) => {
+    if (!reading) return;
+
     console.log("Reading selected:", reading); // Debug log
     setSelectedReading(reading);
     setIsReadingDialogOpen(true);
@@ -256,7 +258,7 @@ export function ReadingCalendar({
             <MonthView
               currentDate={currentDate}
               readings={readings}
-              onReadingSelect={handleReadingSelect}
+              onCellClick={handleReadingSelect}
             />
           )}
           {view === "agenda" && (

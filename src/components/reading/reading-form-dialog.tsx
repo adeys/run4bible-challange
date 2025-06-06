@@ -37,8 +37,8 @@ export function ReadingFormDialog({
   }, [reading]);
 
   const handleDelete = () => {
-    if (reading?.id) {
-      onDelete?.(reading.id);
+    if (reading?.uuid) {
+      onDelete?.(reading.uuid);
     }
   };
 
