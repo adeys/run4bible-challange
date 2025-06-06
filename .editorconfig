@@ -13,6 +13,6 @@ tab_width = 4
 indent_size = 2
 tab_width = 2
 
-[biome.json]
+[{biome.json,wrangler.jsonc}]
 indent_size = 2
 tab_width = 2
