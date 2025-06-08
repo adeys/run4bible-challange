@@ -133,7 +133,7 @@ export function MonthView({
                           <span className="hidden lg:inline-block">
                             {reading.passages.join(", ")}
                           </span>
-                          <span className="hidden lg:inline-block">
+                          <span className="hidden lg:inline-block text-center w-36 truncate">
                             {reading.context}
                           </span>
                         </>

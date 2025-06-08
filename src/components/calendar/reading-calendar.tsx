@@ -106,7 +106,6 @@ export function ReadingCalendar({
   const handleReadingSelect = (_: Date, reading: Reading | null) => {
     if (!reading) return;
 
-    console.log("Reading selected:", reading); // Debug log
     setSelectedReading(reading);
     setIsReadingDialogOpen(true);
   };

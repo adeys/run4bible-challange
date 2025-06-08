@@ -43,16 +43,11 @@ export function ReadingDialog({
 }: ReadingDialogProps) {
   const [error, setError] = useState<string | null>(null);
 
-  // Debug log to check what reading is being passed
-  useEffect(() => {
-    console.log("ReadingDialog received reading:", reading);
-  }, [reading]);
-
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Day {reading?.dayNumber} Reading</DialogTitle>
+          <DialogTitle>{reading?.label} Reading</DialogTitle>
           <DialogDescription className="sr-only">
             {reading?.id
               ? "Edit the details of this reading"

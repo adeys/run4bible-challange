@@ -19,7 +19,6 @@ export function AgendaView({
 }: AgendaViewProps) {
   // Show readings for the next days based on constant
   const days = useMemo(() => {
-    console.log("Agenda view updating with date:", currentDate.toISOString());
     return Array.from({ length: 30 }, (_, i) =>
       addDays(new Date(currentDate), i),
     );
@@ -27,7 +26,6 @@ export function AgendaView({
 
   const handleReadingClick = (reading: Reading, e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Agenda view event clicked:", reading);
     onReadingSelect && onReadingSelect(reading);
   };
 

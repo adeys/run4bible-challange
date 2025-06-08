@@ -1,6 +1,5 @@
-import { format } from "date-fns";
 import { useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, data } from "react-router";
 import { toast } from "sonner";
 
 import type { Route } from "./+types/schedule-calendar";
@@ -8,6 +7,7 @@ import type { Route } from "./+types/schedule-calendar";
 import { ScheduleCalendar } from "~/components/calendar";
 import { Toaster } from "~/components/ui/sonner";
 import { fetchReadings } from "~/lib/database";
+import { commitSession, getSession } from "~/server/session.server";
 
 export function meta() {
   return [
@@ -16,10 +16,24 @@ export function meta() {
   ];
 }
 
-export async function loader({ context }: Route.LoaderArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   const result = await fetchReadings(context.cloudflare.env.DB);
+  const session = await getSession(request.headers.get("Cookie"));
 
-  return { readings: result.results };
+  return data(
+    {
+      readings: result.results,
+      flash: {
+        error: session.get("error"),
+        success: session.get("success"),
+      },
+    },
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    },
+  );
 }
 
 export function HydrateFallback() {
@@ -31,27 +45,19 @@ export function HydrateFallback() {
 }
 
 export default function Calendar({ loaderData }: Route.ComponentProps) {
-  const { readings } = loaderData;
+  const { readings, flash } = loaderData;
 
   useEffect(() => {
-    const flash = localStorage.getItem("flash");
-    if (!flash) return;
+    const { error, success } = flash;
 
-    const { type, reading } = JSON.parse(flash);
-    let message = "";
-    if (type === "reading-added") {
-      message = `Reading for day ${reading.dayNumber} added successfully!`;
-    } else if (type === "reading-updated") {
-      message = `Reading for day ${reading.dayNumber} updated successfully!`;
+    if (error) {
+      toast.error(error, { position: "top-center" });
     }
 
-    toast(message, {
-      description: format(new Date(reading.date), "MMM d, yyyy"),
-      position: "top-center",
-    });
-
-    localStorage.removeItem("flash");
-  });
+    if (success) {
+      toast.success(success, { position: "top-center" });
+    }
+  }, [flash]);
 
   return (
     <div className="min-h-screen container mx-auto p-6 lg:p-8">

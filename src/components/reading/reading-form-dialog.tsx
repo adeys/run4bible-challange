@@ -1,6 +1,7 @@
 import { RiDeleteBinLine } from "@remixicon/react";
 import { useEffect } from "react";
 
+import { Form } from "react-router";
 import type { Reading } from "~/components/calendar";
 import { ReadingForm } from "~/components/reading/reading-form";
 import { Button } from "~/components/ui/button";
@@ -19,7 +20,6 @@ interface ReadingDialogProps {
   action?: string;
   isOpen: boolean;
   onClose?: () => void;
-  // onSave: (reading: Reading) => void;
   onDelete?: (eventId: string) => void;
 }
 
@@ -31,10 +31,6 @@ export function ReadingFormDialog({
   onClose,
   onDelete,
 }: ReadingDialogProps) {
-  // Debug log to check what reading is being passed
-  useEffect(() => {
-    console.log("ReadingFormDialog received reading:", reading);
-  }, [reading]);
 
   const handleDelete = () => {
     if (reading?.uuid) {
@@ -65,14 +61,19 @@ export function ReadingFormDialog({
 
         <DialogFooter className="flex-row sm:justify-between">
           {reading?.id && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleDelete}
-              aria-label="Delete reading"
+            <Form
+              method="post"
+              action={`/admin/calendar/reading/${reading.uuid}/destroy`}
             >
-              <RiDeleteBinLine size={16} aria-hidden="true" />
-            </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleDelete}
+                aria-label="Delete reading"
+              >
+                <RiDeleteBinLine size={16} aria-hidden="true" />
+              </Button>
+            </Form>
           )}
           <div className="flex flex-1 justify-end gap-2">
             <Button variant="outline" onClick={onClose}>

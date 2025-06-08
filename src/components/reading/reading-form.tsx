@@ -29,7 +29,7 @@ export function ReadingForm({
 }: ReadingFormProps) {
   const [dateOpen, setDateOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date>(
-    new Date(reading?.date || new Date()),
+    new Date((reading?.date || new Date()).setHours(0, 0, 0, 0)),
   );
 
   return (
@@ -42,13 +42,19 @@ export function ReadingForm({
             type="text"
             name="label"
             defaultValue={reading?.label}
+            required
           />
         </div>
 
         <div className="flex gap-4">
           <div className="flex-1 *:not-first:mt-1.5">
             <Label htmlFor="date">Date</Label>
-            <input type="hidden" name="date" value={startDate.toISOString()} />
+            <input
+              type="hidden"
+              name="date"
+              value={startDate.toISOString()}
+              required
+            />
             <Popover open={dateOpen} onOpenChange={setDateOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -99,7 +105,8 @@ export function ReadingForm({
           <Input
             id="passages"
             name="passages"
-            defaultValue={reading?.passages.join(",")}
+            defaultValue={reading?.passages.join(";")}
+            required
           />
         </div>
 

@@ -4,6 +4,7 @@ import type { Route } from "./+types/schedule-calendar";
 import type { Reading } from "~/components/calendar";
 import { ReadingFormDialog } from "~/components/reading/reading-form-dialog";
 import { createReading } from "~/lib/database";
+import { commitSession, getSession } from "~/server/session.server";
 
 export function meta() {
   return [
@@ -14,10 +15,11 @@ export function meta() {
 
 export async function action({ context, request }: Route.ActionArgs) {
   const formData = await request.formData();
+
   const reading = {
     id: null,
     label: formData.get("label") as string,
-    passages: [formData.get("passages") as string],
+    passages: (formData.get("passages") as string).split(/\s*;\s*/),
     date: new Date(formData.get("date") as string),
     context: formData.get("context") as string,
     summary: formData.get("summary") as string,
@@ -32,48 +34,23 @@ export async function action({ context, request }: Route.ActionArgs) {
     reading,
   );
 
-  console.log("Result from action:", result);
+  const session = await getSession(request.headers.get("Cookie"));
 
   if (result.success) {
-    reading.id = result.meta.last_row_id;
-    /*
-    addReading(reading);
-
-    localStorage.setItem(
-      "flash",
-      JSON.stringify({ type: "reading-added", reading }),
+    session.flash(
+      "success",
+      `Reading for ${reading.label} created successfully!`,
     );
-   */
 
-    return redirect("/admin/calendar");
+    return redirect("/admin/calendar", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   } else {
     throw new Error("Failed to create reading");
   }
 }
-
-/*
-export async function clientAction({ request }: Route.ClientActionArgs) {
-  const formData = await request.formData();
-  const reading = {
-    id: "reading-day-" + Math.random().toString(16).slice(2, 10),
-    dayNumber: Number.parseInt(formData.get("label") as string, 10),
-    passages: [formData.get("passages") as string],
-    date: new Date(formData.get("date") as string),
-    context: formData.get("context") as string,
-    summary: formData.get("summary") as string,
-    lesson: formData.get("lesson") as string,
-  } as Reading;
-
-  addReading(reading);
-
-  localStorage.setItem(
-    "flash",
-    JSON.stringify({ type: "reading-added", reading }),
-  );
-
-  return redirect("/admin/calendar");
-}
- */
 
 export default function CreateReading() {
   const navigate = useNavigate();

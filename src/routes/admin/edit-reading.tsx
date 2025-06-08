@@ -5,6 +5,7 @@ import type { Route } from "./+types/edit-reading";
 
 import { ReadingFormDialog } from "~/components/reading/reading-form-dialog";
 import { findReading, updateReading } from "~/lib/database";
+import { commitSession, getSession } from "~/server/session.server";
 
 export function meta() {
   return [
@@ -42,37 +43,21 @@ export async function action({ context, request, params }: Route.ActionArgs) {
   } as Reading;
 
   const result = await updateReading(context.cloudflare.env.DB, reading);
+  const session = await getSession(request.headers.get("Cookie"));
 
-  console.log("Result from action:", result);
+  result.success
+    ? session.flash(
+        "success",
+        `Reading for ${reading.label} updated successfully!`,
+      )
+    : session.flash("error", `Failed to update reading for ${reading.label}.`);
 
-  return redirect("/admin/calendar");
+  return redirect("/admin/calendar", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 }
-
-/*
-export async function clientAction({
-  request,
-  params,
-}: Route.ClientActionArgs) {
-  const formData = await request.formData();
-  const reading = {
-    id: params.readingId,
-    dayNumber: Number.parseInt(formData.get("label") as string, 10),
-    passages: [formData.get("passages") as string],
-    date: new Date(formData.get("date") as string),
-    context: formData.get("context") as string,
-    summary: formData.get("summary") as string,
-    lesson: formData.get("lesson") as string,
-  } as Reading;
-
-  updateReading(reading);
-  localStorage.setItem(
-    "flash",
-    JSON.stringify({ type: "reading-updated", reading }),
-  );
-
-  return redirect("/admin/calendar");
-}
- */
 
 export default function EditReading({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
