@@ -115,15 +115,16 @@ export function ReadingCalendar({
   const viewTitle = useMemo(() => {
     if (view === "month") {
       return format(currentDate, "MMMM yyyy");
-    } else if (view === "week") {
+    }
+    if (view === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 0 });
       const end = endOfWeek(currentDate, { weekStartsOn: 0 });
       if (isSameMonth(start, end)) {
         return format(start, "MMMM yyyy");
-      } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
       }
-    } else if (view === "day") {
+      return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
+    }
+    if (view === "day") {
       return (
         <>
           <span className="min-[480px]:hidden" aria-hidden="true">
@@ -137,19 +138,18 @@ export function ReadingCalendar({
           </span>
         </>
       );
-    } else if (view === "agenda") {
+    }
+    if (view === "agenda") {
       // Show the month range for agenda view
       const start = currentDate;
       const end = addDays(currentDate, 30 - 1);
 
       if (isSameMonth(start, end)) {
         return format(start, "MMMM yyyy");
-      } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
       }
-    } else {
-      return format(currentDate, "MMMM yyyy");
+      return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
     }
+    return format(currentDate, "MMMM yyyy");
   }, [currentDate, view]);
 
   return (
@@ -157,9 +157,9 @@ export function ReadingCalendar({
       className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
       style={
         {
-          "--event-height": `24px`,
-          "--event-gap": `4px`,
-          "--week-cells-height": `64px`,
+          "--event-height": "24px",
+          "--event-gap": "4px",
+          "--week-cells-height": "64px",
         } as React.CSSProperties
       }
     >

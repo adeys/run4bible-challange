@@ -64,7 +64,7 @@ export function MonthView({
     reading: Reading | null,
   ) => {
     e.stopPropagation();
-    onCellClick && onCellClick(date, reading);
+    onCellClick?.(date, reading);
   };
 
   const [isMounted, setIsMounted] = useState(false);

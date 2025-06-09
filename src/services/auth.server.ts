@@ -28,6 +28,19 @@ export function getAuthenticator(env: Env) {
             period: 600, // 10 minutes
           },
           sendTOTP: async ({ email, magicLink, code, request }) => {
+            const session = await getSession(request.headers.get("Cookie"));
+            const user = await findUser(env.DB, email);
+
+            // If the user does not exist, don't allow neither auto registration nor login email.
+            if (!user && !env.ALLOW_REGISTRATION) {
+              session.flash("error", "Invalid credentials");
+              throw redirect("/auth/login", {
+                headers: {
+                  "Set-Cookie": await commitSession(session),
+                },
+              });
+            }
+
             const data = await sendLoginMail(env, {
               email,
               token: code,
@@ -37,7 +50,6 @@ export function getAuthenticator(env: Env) {
             console.log("TOTP Mail Response", data);
 
             if (data.error) {
-              const session = await getSession(request.headers.get("Cookie"));
               session.flash("error", data.error.message);
               throw redirect("/auth/login", {
                 headers: {
@@ -50,7 +62,7 @@ export function getAuthenticator(env: Env) {
         async ({ email, request }) => {
           const user = await findUser(env.DB, email);
           if (!user) {
-            throw new Error("Invalid credentials : currentUser not found");
+            throw new Error("Invalid credentials : user not found");
           }
 
           const session = await getSession(request.headers.get("Cookie"));

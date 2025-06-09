@@ -47,9 +47,8 @@ export async function action({ context, request }: Route.ActionArgs) {
         "Set-Cookie": await commitSession(session),
       },
     });
-  } else {
-    throw new Error("Failed to create reading");
   }
+  throw new Error("Failed to create reading");
 }
 
 export default function CreateReading() {

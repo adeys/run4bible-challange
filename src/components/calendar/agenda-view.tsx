@@ -26,7 +26,7 @@ export function AgendaView({
 
   const handleReadingClick = (reading: Reading, e: React.MouseEvent) => {
     e.stopPropagation();
-    onReadingSelect && onReadingSelect(reading);
+    onReadingSelect?.(reading);
   };
 
   // Check if there are any days with readings

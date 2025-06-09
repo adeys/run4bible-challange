@@ -44,9 +44,9 @@ export function ScheduleCalendar({ className, readings }: CalendarProps) {
       className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
       style={
         {
-          "--event-height": `24px`,
-          "--event-gap": `4px`,
-          "--week-cells-height": `64px`,
+          "--event-height": "24px",
+          "--event-gap": "4px",
+          "--week-cells-height": "64px",
         } as React.CSSProperties
       }
     >

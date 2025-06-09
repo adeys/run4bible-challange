@@ -55,7 +55,7 @@ export default function UserMenu({ user }: { user: User }) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <Form action={`/auth/logout`} method="post">
+        <Form action={"/auth/logout"} method="post">
           <DropdownMenuItem asChild>
             <button type="submit" className="flex w-full">
               <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
