@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { Reading } from "~/components/calendar";
 import { Button } from "~/components/ui/button";

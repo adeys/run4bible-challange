@@ -1,5 +1,25 @@
 import { v7 } from "uuid";
 import type { Reading } from "~/components/calendar";
+import type { User } from "~/services/auth.server";
+
+export async function findUser(
+  db: D1Database,
+  email: string,
+): Promise<User | null> {
+  const result = await db
+    .prepare("SELECT id, email, username FROM users WHERE email = ?")
+    .bind(email)
+    .run();
+
+  const row = result.results[0];
+  return result.success && row
+    ? ({
+        id: row.id,
+        email: row.email,
+        username: row.username,
+      } as User)
+    : null;
+}
 
 export async function fetchReadings(
   db: D1Database,

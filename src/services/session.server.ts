@@ -1,6 +1,9 @@
 import { createCookieSessionStorage } from "react-router";
+import type { User } from "~/services/auth.server";
 
-type SessionData = {};
+type SessionData = {
+  user: User;
+};
 
 type SessionFlashData = {
   error: string;
@@ -12,7 +15,7 @@ const { getSession, commitSession, destroySession } =
   createCookieSessionStorage<SessionData, SessionFlashData>({
     // a Cookie from `createCookie` or the CookieOptions to create one
     cookie: {
-      name: "__session",
+      name: "_session",
 
       // All of these are optional
       // domain: "reactrouter.com",
@@ -21,7 +24,7 @@ const { getSession, commitSession, destroySession } =
 
       // expires: new Date(Date.now() + 60_000),
       httpOnly: true,
-      maxAge: 60,
+      maxAge: 24 * 60 * 60, // 24 hours
       path: "/",
       sameSite: "lax",
       secrets: ["s3cret1"], // TODO: Use a secure secret in production

@@ -1,5 +1,4 @@
 import { RiDeleteBinLine } from "@remixicon/react";
-import { useEffect } from "react";
 
 import { Form } from "react-router";
 import type { Reading } from "~/components/calendar";
@@ -31,7 +30,6 @@ export function ReadingFormDialog({
   onClose,
   onDelete,
 }: ReadingDialogProps) {
-
   const handleDelete = () => {
     if (reading?.uuid) {
       onDelete?.(reading.uuid);

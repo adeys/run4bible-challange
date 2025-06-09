@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
-import { deleteReading } from "~/lib/database";
-import { commitSession, getSession } from "~/server/session.server";
+import { deleteReading } from "~/services/database.server";
+import { commitSession, getSession } from "~/services/session.server";
 import type { Route } from "./+types/destroy-reading";
 
 export async function action({ context, request, params }: Route.ActionArgs) {

@@ -1,5 +1,5 @@
 import { ReadingCalendar } from "~/components/calendar";
-import { fetchReadings } from "~/lib/database";
+import { fetchReadings } from "~/services/database.server";
 import type { Route } from "./+types/calendar";
 
 export function meta() {

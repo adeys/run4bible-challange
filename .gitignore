@@ -10,3 +10,5 @@
 # Cloudflare
 .mf
 .wrangler
+.dev.vars
+.env

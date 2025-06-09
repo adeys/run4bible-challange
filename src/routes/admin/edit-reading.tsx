@@ -4,8 +4,8 @@ import type { Reading } from "~/components/calendar";
 import type { Route } from "./+types/edit-reading";
 
 import { ReadingFormDialog } from "~/components/reading/reading-form-dialog";
-import { findReading, updateReading } from "~/lib/database";
-import { commitSession, getSession } from "~/server/session.server";
+import { findReading, updateReading } from "~/services/database.server";
+import { commitSession, getSession } from "~/services/session.server";
 
 export function meta() {
   return [
